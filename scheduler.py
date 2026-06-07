@@ -1,22 +1,15 @@
-def sjf():
-    class Process:
+class Process:
         def __init__(self, process_id, burst_time, arrival_time):
             self.process_id = process_id
             self.burst_time = burst_time
             self.arrival_time = arrival_time
             self.waiting_time = 0
             self.turnaround_time = 0
+
+def sjf_non_preemptive(processes):
     total_waiting_time = 0
     total_turnaround_time = 0
-
-    n = int(input("Enter the number of processes: "))
-    processes = []
-    for i in range(n):
-        burst = int(input(f"Enter burst time for process {i + 1}: "))
-        arrival = int(input(f"Enter arrival time for process {i + 1}: "))
-        process = Process(i + 1, burst, arrival)
-        processes.append(process)
-
+    n = len(processes)
     completed = []
     result = []
     current_time = 0
@@ -44,22 +37,12 @@ def sjf():
         total_turnaround_time += selected.turnaround_time
         completed.append(selected)
         result.append(selected)
-    average_waiting_time = total_waiting_time / n
-    average_turnaround_time = total_turnaround_time / n
+    avg_waiting_time = total_waiting_time / n
+    avg_turnaround_time = total_turnaround_time / n
 
-    print("\nProcess ID | Burst Time | Arrival Time | Waiting Time | Turnaround Time")
-    print("-----------------------------------------------------------------------")
-    for process in result:
-        print(
-            f"{process.process_id:^10} | "
-            f"{process.burst_time:^10} | "
-            f"{process.arrival_time:^12} | "
-            f"{process.waiting_time:^12} | "
-            f"{process.turnaround_time:^15}"
-        )
-    print("\nAverage Waiting Time:", average_waiting_time)
-    print("Average Turnaround Time:", average_turnaround_time)
+    return (
+        result,
+        avg_waiting_time,
+        avg_turnaround_time,
+    )
 
-
-if __name__ == "__main__":
-    sjf()
