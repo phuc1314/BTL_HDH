@@ -44,8 +44,26 @@ class SchedulingGUI:
         self.label_avg.pack(pady=5)
         
         # Calculate button
-        Button(root, text="Calculate Schedule", command=self.calculate_schedule,
-               bg="lightgreen", padx=20, pady=5).pack(pady=10)
+        frame_button = Frame(root, bg="white")
+        frame_button.pack(pady=10)
+
+        Button(
+            frame_button,
+            text="Calculate Schedule",
+            command=self.calculate_schedule,
+            bg="lightgreen",
+            padx=20,
+            pady=5
+        ).grid(row=0, column=0, padx=10)
+
+        Button(
+            frame_button,
+            text="Reset",
+            command=self.reset_data,
+            bg="tomato",
+            padx=20,
+            pady=5
+        ).grid(row=0, column=1, padx=10)
     
     def create_entries(self):
         for w in self.frame_input.winfo_children():
@@ -85,6 +103,23 @@ class SchedulingGUI:
             self.label_avg.config(text=f"Average Waiting Time: {avg_WT:.1f}")
         except ValueError:
             pass
+    def reset_data(self):
+
+        self.entry_num.delete(0, END)
+
+        for widget in self.frame_input.winfo_children():
+            widget.destroy()
+
+        self.burst_entries.clear()
+        self.arrival_entries.clear()
+
+        for item in self.tree.get_children():
+            self.tree.delete(item)
+
+        self.label_avg.config(
+            text="Average Waiting Time: -"
+        )
+
 
 
 if __name__ == "__main__":
