@@ -2,7 +2,6 @@ from tkinter import *
 from tkinter import ttk
 from scheduler import *
 
-
 class SchedulingGUI:
     def __init__(self, root):
         self.root = root
@@ -13,8 +12,9 @@ class SchedulingGUI:
         self.arrival_entries = []
         
         # Title
-        Label(Frame(root, bg="white"), text="Process Scheduling", 
-              font=("Times New Roman", 20, "bold"), bg="white").pack(pady=15)
+        label_title = Label(Frame(root, bg="white"), text="Process Scheduling", 
+              font=("Times New Roman", 20, "bold"), bg="white")
+        label_title.pack(pady=15)
         
         # Input section
         frame = Frame(root, bg="white")
@@ -32,7 +32,7 @@ class SchedulingGUI:
         frame_result = Frame(root, bg="white")
         frame_result.pack(pady=10, padx=20, fill="both", expand=True)
         
-        cols = ("Process ID", "Burst Time", "Arrival Time", "Waiting Time", "Turnaround Time")
+        cols = ("Process ID", "Burst Time", "Arrival Time","Start Time" ,"Complete", "Waiting Time", "Turnaround Time")
         self.tree = ttk.Treeview(frame_result, columns=cols, height=8, show="headings")
         self.tree.pack(fill="both", expand=True)
         for col in cols:
@@ -41,11 +41,32 @@ class SchedulingGUI:
         
         self.label_avg = Label(frame_result, text="Average Waiting Time: -", 
                               font=("Times New Roman", 10, "bold"), bg="white")
+        self.label_avg1 = Label(frame_result, text="Average Turnaround Time: -", 
+                              font=("Times New Roman", 10, "bold"), bg="white")
+        self.label_avg1.pack(pady = 5)
         self.label_avg.pack(pady=5)
         
         # Calculate button
-        Button(root, text="Calculate Schedule", command=self.calculate_schedule,
-               bg="lightgreen", padx=20, pady=5).pack(pady=10)
+        frame_button = Frame(root, bg="white")
+        frame_button.pack(pady=10)
+
+        Button(
+            frame_button,
+            text="Calculate Schedule",
+            command=self.calculate_schedule,
+            bg="lightgreen",
+            padx=20,
+            pady=5
+        ).grid(row=0, column=0, padx=10)
+
+        Button(
+            frame_button,
+            text="Reset",
+            command=self.reset_data,
+            bg="tomato",
+            padx=20,
+            pady=5
+        ).grid(row=0, column=1, padx=10)
     
     def create_entries(self):
         for w in self.frame_input.winfo_children():
@@ -76,16 +97,32 @@ class SchedulingGUI:
         try:
             processes = [Process(i + 1, int(self.burst_entries[i].get()), int(self.arrival_entries[i].get()))
                         for i in range(len(self.burst_entries))]
-            result, avg_WT, _ = sjf_non_preemptive(processes)
+            result, avg_WT, avg_TAT = sjf_non_preemptive(processes)
             
             for item in self.tree.get_children():
                 self.tree.delete(item)
             for p in result:
-                self.tree.insert("", "end", values=(p.pid, p.burst_time, p.arrival_time, p.WT, p.TAT))
+                self.tree.insert("", "end", values=(p.pid, p.burst_time, p.arrival_time,p.start_time, p.complete_time, p.WT, p.TAT))
             self.label_avg.config(text=f"Average Waiting Time: {avg_WT:.1f}")
+            self.label_avg1.config(text=f"Average Turnaround Time: {avg_TAT:.1f}")
         except ValueError:
             pass
+    def reset_data(self):
 
+        self.entry_num.delete(0, END)
+
+        for widget in self.frame_input.winfo_children():
+            widget.destroy()
+
+        self.burst_entries.clear()
+        self.arrival_entries.clear()
+
+        for item in self.tree.get_children():
+            self.tree.delete(item)
+
+        self.label_avg.config(
+            text="Average Waiting Time: -"
+        )
 
 if __name__ == "__main__":
     # Create root window and initialize GUI
