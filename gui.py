@@ -12,8 +12,7 @@ class SchedulingGUI:
         self.arrival_entries = []
         
         # Title
-        label_title = Label(Frame(root, bg="white"), text="Process Scheduling", 
-              font=("Times New Roman", 20, "bold"), bg="white")
+        label_title = Label(root, text="Process Scheduling", font=("Times New Roman", 20, "bold"), bg="white")
         label_title.pack(pady=15)
         
         # Input section
