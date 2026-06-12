@@ -17,15 +17,15 @@ def sjf_non_preemptive(processes):
     result = []
     current_time = 0
     while len(completed) < n:
-        ready_queue = []
+        ready = []
         for process in processes:
             if process not in completed and process.arrival_time <= current_time:
-                ready_queue.append(process)
-        if len(ready_queue) == 0:
+                ready.append(process)
+        if len(ready) == 0:
             current_time += 1
             continue
         # Select the process with the shortest burst time
-        selected = min(ready_queue,key=lambda x: (x.burst_time, x.arrival_time, x.pid))
+        selected = min(ready,key=lambda x: (x.burst_time, x.arrival_time, x.pid))
         selected.start_time = current_time
         # Waiting Time = Start Time - Arrival Time
         selected.WT = selected.start_time - selected.arrival_time

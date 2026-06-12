@@ -6,20 +6,21 @@ class SchedulingGUI:
     def __init__(self, root):
         self.root = root
         self.root.title("Process Scheduling")
-        self.root.geometry("900x700")
+        self.root.geometry("1000x650")
         self.root.config(bg="white")
         self.burst_entries = []
         self.arrival_entries = []
         
         # Title
-        label_title = Label(root, text="Process Scheduling", font=("Times New Roman", 20, "bold"), bg="white")
+        label_title = Label(root, text="Process Scheduling", font=("Times New Roman", 30, "bold"), bg="white")
         label_title.pack(pady=15)
         
         # Input section
         frame = Frame(root, bg="white")
         frame.pack(pady=10, padx=20, fill="x")
-        Label(frame, text="Number of Processes:", font=("Times New Roman", 10), bg="white").grid(row=0, column=0, padx=5)
-        self.entry_num = Entry(frame, width=15, font=("Times New Roman", 10))
+        label_num = Label(frame, text="Number of Processes:", font=("Times New Roman", 10), bg="white")
+        label_num.grid(row=0, column=0, padx=5)
+        self.entry_num = Entry(frame, width=20, font=("Times New Roman", 10))
         self.entry_num.grid(row=0, column=1, padx=5)
         Button(frame, text="Create Entries", command=self.create_entries, bg="lightblue").grid(row=0, column=2, padx=20)
         
@@ -31,7 +32,7 @@ class SchedulingGUI:
         frame_result = Frame(root, bg="white")
         frame_result.pack(pady=10, padx=20, fill="both", expand=True)
         
-        cols = ("Process ID", "Burst Time", "Arrival Time","Start Time" ,"Complete", "Waiting Time", "Turnaround Time")
+        cols = ("Process ID", "Burst Time", "Arrival Time","Start Time" ,"Complete Time", "Waiting Time", "Turnaround Time")
         self.tree = ttk.Treeview(frame_result, columns=cols, height=8, show="headings")
         self.tree.pack(fill="both", expand=True)
         for col in cols:
