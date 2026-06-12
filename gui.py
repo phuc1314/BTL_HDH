@@ -1,6 +1,7 @@
 from tkinter import *
 from tkinter import ttk
 from scheduler import *
+from gantt import draw_gantt
 
 class SchedulingGUI:
     def __init__(self, root):
@@ -43,9 +44,15 @@ class SchedulingGUI:
                               font=("Times New Roman", 10, "bold"), bg="white")
         self.label_avg1 = Label(frame_result, text="Average Turnaround Time: -", 
                               font=("Times New Roman", 10, "bold"), bg="white")
-        self.label_avg1.pack(pady = 5)
-        self.label_avg.pack(pady=5)
+        self.label_avg2 = Label(frame_result, text="CPU Utilization: -", 
+                              font=("Times New Roman", 10, "bold"), bg="white")
+        self.label_avg3 = Label(frame_result, text="Throughput: -", 
+                              font=("Times New Roman", 10, "bold"), bg="white")
         
+        self.label_avg.pack(pady=5)
+        self.label_avg1.pack(pady = 5)
+        self.label_avg2.pack(pady=5)
+        self.label_avg3.pack(pady=5)
         # Calculate button
         frame_button = Frame(root, bg="white")
         frame_button.pack(pady=10)
@@ -97,14 +104,17 @@ class SchedulingGUI:
         try:
             processes = [Process(i + 1, int(self.burst_entries[i].get()), int(self.arrival_entries[i].get()))
                         for i in range(len(self.burst_entries))]
-            result, avg_WT, avg_TAT = sjf_non_preemptive(processes)
+            result, avg_WT, avg_TAT, cpu_u, throughput  = sjf_non_preemptive(processes)
             
             for item in self.tree.get_children():
                 self.tree.delete(item)
             for p in result:
                 self.tree.insert("", "end", values=(p.pid, p.burst_time, p.arrival_time,p.start_time, p.complete_time, p.WT, p.TAT))
-            self.label_avg.config(text=f"Average Waiting Time: {avg_WT:.1f}")
-            self.label_avg1.config(text=f"Average Turnaround Time: {avg_TAT:.1f}")
+            self.label_avg.config(text=f"Average Waiting Time: {avg_WT:.2f}")
+            self.label_avg1.config(text=f"Average Turnaround Time: {avg_TAT:.2f}")
+            self.label_avg2.config(text=f"CPU Utilization: {cpu_u:.2f}%")
+            self.label_avg3.config(text=f"Throughput: {throughput:.2f}")
+            draw_gantt(processes)
         except ValueError:
             pass
     def reset_data(self):
@@ -119,13 +129,3 @@ class SchedulingGUI:
 
         for item in self.tree.get_children():
             self.tree.delete(item)
-
-        self.label_avg.config(
-            text="Average Waiting Time: -"
-        )
-
-if __name__ == "__main__":
-    # Create root window and initialize GUI
-    root = Tk()
-    app = SchedulingGUI(root)
-    root.mainloop()

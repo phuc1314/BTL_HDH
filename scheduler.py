@@ -12,6 +12,7 @@ class Process:
 def sjf_non_preemptive(processes):
     total_WT = 0
     total_TAT = 0
+    busy_time = 0
     n = len(processes)
     completed = set()
     result = []
@@ -27,22 +28,28 @@ def sjf_non_preemptive(processes):
         # Select the process with the shortest burst time
         selected = min(ready,key=lambda x: (x.burst_time, x.arrival_time, x.pid))
         selected.start_time = current_time
-        # Waiting Time = Start Time - Arrival Time
-        selected.WT = selected.start_time - selected.arrival_time
         # Run the process until completion
         current_time += selected.burst_time
         selected.complete_time = current_time
         # Turnaround Time = Complete Time - Arrival Time
         selected.TAT = selected.complete_time - selected.arrival_time
+        # Waiting Time = TAT - Burst Time
+        selected.WT = selected.TAT - selected.burst_time
         total_WT += selected.WT
         total_TAT += selected.TAT
+        busy_time += selected.burst_time
         completed.add(selected)
         result.append(selected)
     avg_WT = total_WT / n
     avg_TAT = total_TAT / n
-
+    #CPU Utilization = (Total Burst Time / Total System Time) × 100%
+    cpu_u = (busy_time/selected.complete_time) * 100
+    #Throughput = Number of Processes / Total Time
+    throughput = n / selected.complete_time
     return (
         result,
         avg_WT,
         avg_TAT,
+        cpu_u,
+        throughput
     )
