@@ -2,6 +2,7 @@ def fcfs(processes, n):
     t = 0
     gantt = []
     complete_set = {}
+    busy = 0
     tt_wt = 0
     tt_tat = 0
     processes.sort()
@@ -19,15 +20,20 @@ def fcfs(processes, n):
             ct = t
             tt = ct - process[0]
             wt = tt - process[1]
+            busy += process[1]
             tt_wt += wt
             tt_tat += tt
             complete_set[pid] = [st, ct, tt, wt]
     avg_wt = tt_wt / n
     avg_tat = tt_tat/ n
+    cpu_u = busy / ct
+    throughput = n / ct
     print(gantt)
     print(complete_set)
     print(f"Average Turnaround Time:{avg_tat}")
     print(f"Average Waiting Time: {avg_wt}")
+    print(f"CPU Utilization: {cpu_u}%")
+    print(f"Throughput: {throughput}")
 
 
 if __name__ == "__main__":
