@@ -1,7 +1,6 @@
 from tkinter import *
 from tkinter import ttk
 from scheduler import *
-from gantt import draw_gantt
 
 class SchedulingGUI:
     def __init__(self, root):
@@ -114,7 +113,6 @@ class SchedulingGUI:
             self.label_avg1.config(text=f"Average Turnaround Time: {avg_TAT:.2f}")
             self.label_avg2.config(text=f"CPU Utilization: {cpu_u:.2f}%")
             self.label_avg3.config(text=f"Throughput: {throughput:.2f}")
-            draw_gantt(processes)
         except ValueError:
             pass
     def reset_data(self):

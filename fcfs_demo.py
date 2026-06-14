@@ -23,7 +23,7 @@ def fcfs(processes, n):
             busy += process[1]
             tt_wt += wt
             tt_tat += tt
-            complete_set[pid] = [st, ct, tt, wt]
+            complete_set[pid] = [f"Start Time: {st}", f"Complete Time: {ct}",f"Turnaround Time: {tt}",f"Waiting Time: {wt}"]
     avg_wt = tt_wt / n
     avg_tat = tt_tat/ n
     cpu_u = busy / ct
